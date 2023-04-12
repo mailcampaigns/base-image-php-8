@@ -1,0 +1,42 @@
+name: Build and push new Docker Images
+on:
+  push:
+    branch:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push-docker-images:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract tags and labels
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/php-8-base
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Container Registry login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
