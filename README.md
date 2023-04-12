@@ -1,6 +1,4 @@
-# Docker Image (base)
-## PHP 8
-
+# Docker Image: PHP 8 (base)
 Extends from: [php:8.2-fpm-alpine](https://hub.docker.com/layers/library/php/8.2-fpm-alpine/images/sha256-8ea546347aa67ebe9d31f0d38598c2ecabe5473f2143661a0159d48d6749490f)
 
 Installed extensions:
